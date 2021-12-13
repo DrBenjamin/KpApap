@@ -5,7 +5,7 @@ import numpy as np
 st.title('Uber pickups in NYC')
 
 DATE_COLUMN = 'date/time'
-# Link
+# Link to Helmholtz-Zentrum Potsdam
 # https://www-app3.gfz-potsdam.de/kp_index/Kp_ap_nowcast.txt
 DATA_URL = ('https://s3-us-west-2.amazonaws.com/'
             'streamlit-demo-data/uber-raw-data-sep14.csv.gz')
