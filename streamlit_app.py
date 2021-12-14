@@ -3,6 +3,8 @@ import pandas as pd
 import numpy as np
 
 st.title('Geomagnetische Aktivität')
+st.subheader('Planetarische Kennziffern der geomantischen Aktivität')
+st.write('Der geomagnetische 3-Stunden Kp-Index wurde 1949 von J. Bartels eingeführt und berechnet sich aus den standardisierten K-Indices (Ks) von 13 geomagnetischen Observatorien. Er wurde entwickelt, um die solare Teilchenstrahlung über ihre magnetischen Effekte zu messen und gilt heute als Proxy für den Energieeintrag aus dem Sonnenwind in das System Erde.')
 
 DATE_COLUMN = 'date/time'
 # Link to Helmholtz-Zentrum Potsdam

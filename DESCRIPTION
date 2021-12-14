@@ -1,0 +1,10 @@
+Package: KpApap
+Type: Package
+Title: Shows geomagnetic activity
+Version: 0.1.0
+Author: Benjamin Groß
+Maintainer: Benjamin Groß <ben@benbox.org>
+Description: It shows geomagnetic activity.
+License: Freeware
+Encoding: UTF-8
+LazyData: true
