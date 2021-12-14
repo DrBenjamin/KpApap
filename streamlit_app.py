@@ -37,10 +37,8 @@ if st.checkbox('Show raw data'):
 ## Plotting
 st.subheader('Diagram of geomagnetic activity')
 # create data for plotting
-data_plot = pd.DataFrame({"Year":data.Year,
+data_plot = pd.DataFrame({"Year":pd.to_datetime(data.Year.map(str) + "-" + data.Month.map(str) + "-" + data.Day.map(str)),
                           "ap":data.ap})
-# convert column 'Year' to object type
-data_plot = data_plot.astype({'Year': np.object})
 # set index (x-axis) to 'Year' column
 data_plot = data_plot.set_index('Year')
 # do the plotting
