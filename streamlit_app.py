@@ -1,8 +1,8 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import math
 import matplotlib.pyplot as plt
-from scipy.stats import gaussian_kde
 
 st.title('GEOMAGNETIC ACTIVITY')
 st.subheader('Planetary indicators of geomantic activity')
@@ -31,6 +31,7 @@ if st.checkbox('Show raw data'):
     st.write(data)
 
 st.subheader('Diagram of geomagnetic activity')
-data_plot = pd.DataFrame({"Kp":data.Kp,
+data_plot = pd.DataFrame({"Year":data.Year,
                           "ap":data.ap})
-st.line_chart(data["ap"])
+st.line_chart(data_plot)
+st.altair_chart(data_plot)
