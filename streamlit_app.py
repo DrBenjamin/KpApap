@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
-st.title('Planetarische Kennziffern der geomagnetischen Aktivität')
+st.title('Geomagnetische Aktivität')
 
 DATE_COLUMN = 'date/time'
 # Link to Helmholtz-Zentrum Potsdam
