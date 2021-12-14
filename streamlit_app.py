@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import math
+import datetime
 
 ## Title and some information
 st.title('GEOMAGNETIC ACTIVITY')
@@ -38,6 +39,8 @@ st.subheader('Diagram of geomagnetic activity')
 # create data for plotting
 data_plot = pd.DataFrame({"Year":data.Year,
                           "ap":data.ap})
+# convert column 'Year' to object type
+data_plot = data_plot.astype({'Year': np.object})
 # set index (x-axis) to 'Year' column
 data_plot = data_plot.set_index('Year')
 # do the plotting
