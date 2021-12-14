@@ -1,40 +1,36 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
+from scipy.stats import gaussian_kde
 
-st.title('Geomagnetische Aktivität')
-st.subheader('Planetarische Kennziffern der geomantischen Aktivität')
-st.write('Der geomagnetische 3-Stunden Kp-Index wurde 1949 von J. Bartels eingeführt und berechnet sich aus den standardisierten K-Indices (Ks) von 13 geomagnetischen Observatorien. Er wurde entwickelt, um die solare Teilchenstrahlung über ihre magnetischen Effekte zu messen und gilt heute als Proxy für den Energieeintrag aus dem Sonnenwind in das System Erde.')
+st.title('GEOMAGNETIC ACTIVITY')
+st.subheader('Planetary indicators of geomantic activity')
+st.write('The geomagnetic 3-hour Kp index was introduced in 1949 by J. Bartels and is calculated from the standardized K indices (Ks) of 13 geomagnetic observatories. It was developed to measure solar particle radiation via its magnetic effects and is now considered a proxy for the energy input from the solar wind into the Earth system.')
 
 DATE_COLUMN = 'date/time'
 # Link to Helmholtz-Zentrum Potsdam
 # https://www-app3.gfz-potsdam.de/kp_index/Kp_ap_nowcast.txt
-DATA_URL = ('https://s3-us-west-2.amazonaws.com/'
-            'streamlit-demo-data/uber-raw-data-sep14.csv.gz')
+# https://www-app3.gfz-potsdam.de/kp_index/Kp_ap_since_1932.txt
+# CSV Testfile: https://www.benbox.org/R/py/test.csv
+# Text Testfile: https://www.benbox.org/R/py/test.txt
+DATA_URL = ('https://www-app3.gfz-potsdam.de/kp_index/Kp_ap_since_1932.txt')
 
 @st.cache
-def load_data(nrows):
-    data = pd.read_csv(DATA_URL, nrows=nrows)
-    lowercase = lambda x: str(x).lower()
-    data.rename(lowercase, axis='columns', inplace=True)
-    data[DATE_COLUMN] = pd.to_datetime(data[DATE_COLUMN])
+def load_data():
+    colnames = ['Year', 'Month', 'Day', 'Hour', 'Minute', 'Days', 'Days_m', 'Kp', 'ap', 'D']
+    data = pd.read_table(DATA_URL, sep = " ", header = None, names = colnames, skiprows = 31, skipinitialspace = True)
     return data
 
 data_load_state = st.text('Loading data...')
-data = load_data(10000)
-data_load_state.text("Done! (using st.cache)")
+data = load_data()
+data_load_state.text("Kp und ap downloaded!")
 
 if st.checkbox('Show raw data'):
     st.subheader('Raw data')
     st.write(data)
 
-st.subheader('Number of pickups by hour')
-hist_values = np.histogram(data[DATE_COLUMN].dt.hour, bins=24, range=(0,24))[0]
-st.bar_chart(hist_values)
-
-# Some number in the range 0-23
-hour_to_filter = st.slider('hour', 0, 23, 17)
-filtered_data = data[data[DATE_COLUMN].dt.hour == hour_to_filter]
-
-st.subheader('Map of all pickups at %s:00' % hour_to_filter)
-st.map(filtered_data)
+st.subheader('Diagram of geomagnetic activity')
+data_plot = pd.DataFrame({"Kp":data.Kp,
+                          "ap":data.ap})
+st.line_chart(data["ap"])
