@@ -19,3 +19,5 @@ PackageInstallArgs: --no-multiarch --with-keep.source
 PythonType: system
 PythonVersion: 3.9.9
 PythonPath: /usr/local/bin/python3.9
+
+SpellingDictionary: en_GB
