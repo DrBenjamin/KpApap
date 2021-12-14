@@ -1,3 +1,14 @@
+# My stuff
+test.py
+test.txt
+test.csv
+Kp_ap_nowcast.txt
+Kp_ap_since_1932.txt
+.Rdata
+.Rbuildignore
+.Rhistory
+KpApap.Rproj
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
