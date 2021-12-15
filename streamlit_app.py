@@ -67,7 +67,7 @@ max_ap_data['ap'] = list(max_ap)
 max_ap_data_index = pd.Index(range(1, 11, 1))
 max_ap_data = max_ap_data.set_index(max_ap_data_index)
 # Show top 10 data                    
-st.write('The maximum of the daily average ap was ', str(int(max_ap[0])), ' on ', str(max_ap_y[0]))
+st.write('The maximum of the daily average ap was ', str(int(max_ap[0])), ' on ', str(max_ap_y[0]), '.')
 if st.checkbox('Show max. ap days'):
     st.subheader('Top 10 max. ap')
     st.write(max_ap_data)
