@@ -6,7 +6,6 @@ import math
 import datetime
 import rpy2.robjects as robjects
 import rpy2.robjects.packages as rpackages
-from rpy2.robjects.vectors import StrVector
 from rpy2.robjects.packages import SignatureTranslatedAnonymousPackage
 
 ## R-Code
@@ -17,13 +16,13 @@ rCode = SignatureTranslatedAnonymousPackage(rcode, "rCode")
 ## Title and some information
 st.title('GEOMAGNETIC ACTIVITY')
 st.subheader('Planetary indicators of geomantic activity')
-#st.write('The geomagnetic 3-hour Kp index was introduced in 1949 by J. Bartels and is calculated from the standardized K indices (Ks) of 13 geomagnetic observatories. It was developed to measure solar particle radiation via its magnetic effects and is now considered a proxy for the energy input from the solar wind into the Earth system.')
-#st.write('Because of the non-linear relationship of the K-scale to magnetometer fluctuations, it is not meaningful to take the average of a set of K-indices. Instead, every 3-hour K-value will be converted back into a linear scale called the a-index or just ap.')
+st.write('The geomagnetic 3-hour Kp index was introduced in 1949 by J. Bartels and is calculated from the standardized K indices (Ks) of 13 geomagnetic observatories. It was developed to measure solar particle radiation via its magnetic effects and is now considered a proxy for the energy input from the solar wind into the Earth system.')
+st.write('Because of the non-linear relationship of the K-scale to magnetometer fluctuations, it is not meaningful to take the average of a set of K-indices. Instead, every 3-hour K-value will be converted back into a linear scale called the a-index or just ap.')
 
 # Link to data from Helmholtz-Zentrum Potsdam
 # https://www-app3.gfz-potsdam.de/kp_index/Kp_ap_nowcast.txt
 # https://www-app3.gfz-potsdam.de/kp_index/Kp_ap_since_1932.txt
-DATA_URL = ('https://www-app3.gfz-potsdam.de/kp_index/Kp_ap_since_1932.txt')
+DATA_URL = 'https://www-app3.gfz-potsdam.de/kp_index/Kp_ap_since_1932.txt'
 
 ## Load data function
 def load_data():
@@ -34,7 +33,7 @@ def load_data():
 # Show loading message
 data_load_state = st.text('Loading data...')
 data = load_data()
-data_load_state.text("ap data downloaded!")
+data_load_state.text('ap data downloaded!')
 
 ## Checkbox for option to see raw data
 if st.checkbox('Show raw data'):
@@ -50,7 +49,7 @@ test_str = ""
 avg_ap_d = []
 avg_ap_d_t = []
 x = 0
-for i in range(1, len(data_cal)): 
+for i in range(1, len(data_cal)) : 
   if data_cal['Year'][i] == test_str or i == 1:
     x = x + data_cal['ap'][i]
     test_str = data_cal['Year'][i]
@@ -62,7 +61,7 @@ for i in range(1, len(data_cal)):
     x = data_cal['ap'][i]
     test_str = data_cal['Year'][i]
 args = list(map(str, avg_ap_d))
-st.write('The maximum of the daily average ap was:', rCode.maxap(args))
+st.write('The maximum of the daily average ap was: ', str(np.array(rCode.maxap(args)).astype(int)[0]), ' (calculation was R scripted!)')
 
 ## Plotting
 st.subheader('Diagram of geomagnetic activity')
