@@ -8,21 +8,25 @@ import subprocess
 import rpy2.robjects as robjects
 import rpy2.robjects.packages as rpackages
 from rpy2.robjects.vectors import StrVector
+from rpy2.robjects.packages import SignatureTranslatedAnonymousPackage
+
+## R-Code
+Rfile = open("max_script.R", 'r', encoding='utf-8')
+rcode = Rfile.read()
+rCode = SignatureTranslatedAnonymousPackage(rcode, "rCode")
 
 ## Title and some information
 st.title('GEOMAGNETIC ACTIVITY')
 st.subheader('Planetary indicators of geomantic activity')
-st.write('The geomagnetic 3-hour Kp index was introduced in 1949 by J. Bartels and is calculated from the standardized K indices (Ks) of 13 geomagnetic observatories. It was developed to measure solar particle radiation via its magnetic effects and is now considered a proxy for the energy input from the solar wind into the Earth system.')
-st.write('Because of the non-linear relationship of the K-scale to magnetometer fluctuations, it is not meaningful to take the average of a set of K-indices. Instead, every 3-hour K-value will be converted back into a linear scale called the a-index or just ap.')
+#st.write('The geomagnetic 3-hour Kp index was introduced in 1949 by J. Bartels and is calculated from the standardized K indices (Ks) of 13 geomagnetic observatories. It was developed to measure solar particle radiation via its magnetic effects and is now considered a proxy for the energy input from the solar wind into the Earth system.')
+#st.write('Because of the non-linear relationship of the K-scale to magnetometer fluctuations, it is not meaningful to take the average of a set of K-indices. Instead, every 3-hour K-value will be converted back into a linear scale called the a-index or just ap.')
 
-DATE_COLUMN = 'date/time'
 # Link to data from Helmholtz-Zentrum Potsdam
 # https://www-app3.gfz-potsdam.de/kp_index/Kp_ap_nowcast.txt
 # https://www-app3.gfz-potsdam.de/kp_index/Kp_ap_since_1932.txt
 DATA_URL = ('https://www-app3.gfz-potsdam.de/kp_index/Kp_ap_since_1932.txt')
 
 ## Load data function
-@st.cache
 def load_data():
     colnames = ['Year', 'Month', 'Day', 'Hour', 'Minute', 'Days', 'Days_m', 'Kp', 'ap', 'D']
     data = pd.read_table(DATA_URL, sep = " ", header = None, names = colnames, skiprows = 31, skipinitialspace = True)
@@ -41,14 +45,6 @@ if st.checkbox('Show raw data'):
 ## create a data frame
 data_cal = pd.DataFrame({"Year":pd.to_datetime(data.Year.map(str) + "-" + data.Month.map(str) + "-" + data.Day.map(str)),
                           "ap":data.ap})
-                          
-## R code implementation
-# Define command and arguments
-command = 'Rscript'
-#Rfile = open("max.R", 'r', encoding='utf-8')
-#source_code = Rfile.read() 
-#st.write(source_code)
-path2script = 'max.R'
 
 # avg ap per day as a string list for args
 test_str = ""
@@ -67,10 +63,7 @@ for i in range(1, len(data_cal)):
     x = data_cal['ap'][i]
     test_str = data_cal['Year'][i]
 args = list(map(str, avg_ap_d))
-# Build subprocess command
-cmd = [command, path2script] + args
-# check_output will run the command and print the result
-st.write('The maximum of the daily average ap was:', subprocess.check_output(cmd, universal_newlines = True))
+st.write('The maximum of the daily average ap was:', rCode.maxap(args))
 
 ## Plotting
 st.subheader('Diagram of geomagnetic activity')
