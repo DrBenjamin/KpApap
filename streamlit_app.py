@@ -4,15 +4,6 @@ import pandas as pd
 import numpy as np
 import math
 import datetime
-import rpy2
-#import rpy2.robjects as robjects
-#import rpy2.robjects.packages as rpackages
-from rpy2.robjects.packages import SignatureTranslatedAnonymousPackage
-
-## R-Code
-Rfile = open("max_script.R", 'r', encoding='utf-8')
-rcode = Rfile.read()
-rCode = SignatureTranslatedAnonymousPackage(rcode, "rCode")
 
 ## Title and some information
 st.title('GEOMAGNETIC ACTIVITY')
@@ -50,6 +41,7 @@ test_str = ""
 avg_ap_d = []
 avg_ap_d_t = []
 x = 0
+max_ap = 0
 for i in range(1, len(data_cal)) : 
   if data_cal['Year'][i] == test_str or i == 1:
     x = x + data_cal['ap'][i]
@@ -58,11 +50,15 @@ for i in range(1, len(data_cal)) :
     x = x / 8
     avg_ap_d_t.append(str(data_cal['Year'][i]))
     avg_ap_d.append(int(np.ceil(x)))
+    if x > max_ap :
+      max_ap = np.ceil(x)
+      max_ap_y = str(data_cal['Year'][i])
     x = 0
     x = data_cal['ap'][i]
     test_str = data_cal['Year'][i]
-args = list(map(str, avg_ap_d))
-st.write('The maximum of the daily average ap was: ', str(np.array(rCode.maxap(args)).astype(int)[0]), ' (calculation was R scripted!)')
+
+max_ap_y = max_ap_y[0:10]  
+st.write('The maximum of the daily average ap was ', str(max_ap), ' on ', str(max_ap_y))
 
 ## Plotting
 st.subheader('Diagram of geomagnetic activity')
