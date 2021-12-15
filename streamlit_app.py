@@ -33,39 +33,50 @@ if st.checkbox('Show raw data'):
     st.write(data)
 
 ## create a data frame
-data_cal = pd.DataFrame({"Year":pd.to_datetime(data.Year.map(str) + "-" + data.Month.map(str) + "-" + data.Day.map(str)),
-                          "ap":data.ap})
+data_cal = pd.DataFrame({'Date':pd.to_datetime(data.Year.map(str) + "-" + data.Month.map(str) + "-" + data.Day.map(str)),
+                          'ap':data.ap})
 
 # avg ap per day as a string list for args
 test_str = ""
 avg_ap_d = []
 avg_ap_d_t = []
 x = 0
-max_ap = 0
+max_ap = [0, 0 , 0, 0, 0, 0, 0, 0, 0, 0]
+max_ap_y = ['', '', '', '', '', '', '', '', '', '']
 for i in range(1, len(data_cal)) : 
-  if data_cal['Year'][i] == test_str or i == 1:
+  if data_cal['Date'][i] == test_str or i == 1:
     x = x + data_cal['ap'][i]
-    test_str = data_cal['Year'][i]
+    test_str = data_cal['Date'][i]
   else :
     x = x / 8
-    avg_ap_d_t.append(str(data_cal['Year'][i]))
+    avg_ap_d_t.append(str(test_str))
     avg_ap_d.append(int(np.ceil(x)))
-    if x > max_ap :
-      max_ap = np.ceil(x)
-      max_ap_y = str(data_cal['Year'][i])
-    x = 0
+    for y in range(0, 10, 1) :
+      if x > max_ap[y] :
+        max_ap[y] = int(np.ceil(x))
+        max_ap_y[y] = str(test_str)[0:10]
+        break
     x = data_cal['ap'][i]
-    test_str = data_cal['Year'][i]
+    test_str = data_cal['Date'][i]
 
-max_ap_y = max_ap_y[0:10]  
-st.write('The maximum of the daily average ap was ', str(max_ap), ' on ', str(max_ap_y))
-
+## Show 10 maximum ap days
+max_ap_data = pd.DataFrame()
+max_ap_data['Date'] = list(max_ap_y)
+max_ap_data['ap'] = list(max_ap)
+max_ap_data_index = pd.Index(range(1, 11, 1))
+max_ap_data = max_ap_data.set_index(max_ap_data_index)
+# Show top 10 data                    
+st.write('The maximum of the daily average ap was ', str(int(max_ap[0])), ' on ', str(max_ap_y[0]))
+if st.checkbox('Show max. ap days'):
+    st.subheader('Max. ap')
+    st.write(max_ap_data)
+    
 ## Plotting
 st.subheader('Diagram of geomagnetic activity')
 # create dataframe with avg ap per day values
-data_plot = pd.DataFrame({'Year': pd.to_datetime(avg_ap_d_t),
+data_plot = pd.DataFrame({'Date': pd.to_datetime(avg_ap_d_t),
                          'ap': avg_ap_d})
-# set index (x-axis) to 'Year' column
-data_plot = data_plot.set_index('Year')
+# set index (x-axis) to 'Date' column
+data_plot = data_plot.set_index('Date')
 # do the plotting
 st.line_chart(data_plot)
