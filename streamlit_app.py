@@ -7,7 +7,7 @@ import datetime
 import rpy2
 #import rpy2.robjects as robjects
 #import rpy2.robjects.packages as rpackages
-#from rpy2.robjects.packages import SignatureTranslatedAnonymousPackage
+from rpy2.robjects.packages import SignatureTranslatedAnonymousPackage
 
 ## R-Code
 Rfile = open("max_script.R", 'r', encoding='utf-8')
