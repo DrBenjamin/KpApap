@@ -40,7 +40,10 @@ data_cal = pd.DataFrame({"Year":pd.to_datetime(data.Year.map(str) + "-" + data.M
 ## R code implementation
 # Define command and arguments
 command = 'Rscript'
-path2script = 'https://github.com/DrBenjamin/KpApap/blob/master/max.R'
+Rfile = open("max.R", 'r', encoding='utf-8')
+source_code = Rfile.read() 
+print(source_code)
+path2script = 'max.R'
 
 # avg ap per day as a string list for args
 test_str = ""
