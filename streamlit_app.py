@@ -62,7 +62,7 @@ args = list(map(str, avg_ap_d))
 # Build subprocess command
 cmd = [command, path2script] + args
 # check_output will run the command and print the result
-st.write('The maximum of the daily average ap was:', subprocess.check_output(cmd, universal_newlines = True))
+#st.write('The maximum of the daily average ap was:', subprocess.check_output(cmd, universal_newlines = True))
 
 ## Plotting
 st.subheader('Diagram of geomagnetic activity')
