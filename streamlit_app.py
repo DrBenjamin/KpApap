@@ -10,6 +10,7 @@ import subprocess
 st.title('GEOMAGNETIC ACTIVITY')
 st.subheader('Planetary indicators of geomantic activity')
 st.write('The geomagnetic 3-hour Kp index was introduced in 1949 by J. Bartels and is calculated from the standardized K indices (Ks) of 13 geomagnetic observatories. It was developed to measure solar particle radiation via its magnetic effects and is now considered a proxy for the energy input from the solar wind into the Earth system.')
+st.write('Because of the non-linear relationship of the K-scale to magnetometer fluctuations, it is not meaningful to take the average of a set of K-indices. Instead, every 3-hour K-value will be converted back into a linear scale called the a-index or just ap.')
 
 DATE_COLUMN = 'date/time'
 # Link to data from Helmholtz-Zentrum Potsdam
