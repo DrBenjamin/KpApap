@@ -1,4 +1,5 @@
 import streamlit as st
+import streamlit.components.v1 as stc
 import pandas as pd
 import numpy as np
 import math
@@ -42,7 +43,7 @@ data_cal = pd.DataFrame({"Year":pd.to_datetime(data.Year.map(str) + "-" + data.M
 command = 'Rscript'
 Rfile = open("max.R", 'r', encoding='utf-8')
 source_code = Rfile.read() 
-print(source_code)
+st.write(source_code)
 path2script = 'max.R'
 
 # avg ap per day as a string list for args
