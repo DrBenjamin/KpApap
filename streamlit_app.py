@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import math
 import datetime
+import subprocess
 
 ## Title and some information
 st.title('GEOMAGNETIC ACTIVITY')
@@ -10,12 +11,10 @@ st.subheader('Planetary indicators of geomantic activity')
 st.write('The geomagnetic 3-hour Kp index was introduced in 1949 by J. Bartels and is calculated from the standardized K indices (Ks) of 13 geomagnetic observatories. It was developed to measure solar particle radiation via its magnetic effects and is now considered a proxy for the energy input from the solar wind into the Earth system.')
 
 DATE_COLUMN = 'date/time'
-# Link to Helmholtz-Zentrum Potsdam
+# Link to data from Helmholtz-Zentrum Potsdam
 # https://www-app3.gfz-potsdam.de/kp_index/Kp_ap_nowcast.txt
 # https://www-app3.gfz-potsdam.de/kp_index/Kp_ap_since_1932.txt
-# CSV Testfile: https://www.benbox.org/R/py/test.csv
-# Text Testfile: https://www.benbox.org/R/py/test.txt
-DATA_URL = ('https://www-app3.gfz-potsdam.de/kp_index/Kp_ap_since_1932.txt')
+DATA_URL = ('https://www-app3.gfz-potsdam.de/kp_index/Kp_ap_nowcast.txt')
 
 ## Load data function
 @st.cache
