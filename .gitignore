@@ -7,6 +7,8 @@ Kp_ap_since_1932.txt
 .Rdata
 .Rbuildignore
 .Rhistory
+secrets.toml
+.streamlit/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
