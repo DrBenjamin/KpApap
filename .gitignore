@@ -10,6 +10,7 @@ Kp_ap_since_1932.txt
 secrets.toml
 .streamlit/
 KpApap.sql
+KpApap.xml
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
