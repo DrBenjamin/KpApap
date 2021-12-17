@@ -41,7 +41,7 @@ st.write('Because of the non-linear relationship of the K-scale to magnetometer 
 DATA_URL = 'https://www-app3.gfz-potsdam.de/kp_index/Kp_ap_since_1932.txt'
 
 ## Load data function
-@st.experimental_memo
+@st.cache
 def load_data():
     colnames = ['Year', 'Month', 'Day', 'Hour', 'Minute', 'Days', 'Days_m', 'Kp', 'ap', 'D']
     data = pd.read_table(DATA_URL, sep = " ", header = None, names = colnames, skiprows = 31, skipinitialspace = True)
