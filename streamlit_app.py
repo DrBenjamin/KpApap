@@ -6,10 +6,16 @@ import math
 import datetime
 import mysql.connector
 
+st.set_page_config(
+     page_title = "KpApap",
+     page_icon = "thumbnail.png",
+     #layout = "wide",
+     initial_sidebar_state = "expanded",
+)
+
 ## SQL Connection
 # Initialize connection.
 # Uses st.cache to only run once.
-#@st.cache(allow_output_mutation=True, hash_funcs={"_thread.RLock": lambda _: None})
 def init_connection():
     return mysql.connector.connect(**st.secrets["mysql"])
 
@@ -17,17 +23,11 @@ conn = init_connection()
 
 # Perform query.
 # Uses st.cache to only rerun when the query changes or after 10 min.
-@st.cache(ttl=600)
+#@st.cache(ttl=600)
 def run_query(query):
     with conn.cursor() as cur:
         cur.execute(query)
         return cur.fetchall()
-
-rows = run_query("SELECT * from pets;")
-
-# Print results.
-for row in rows:
-    st.write(f"{row[0]} has a :{row[1]}:")
 
 ## Title and some information
 st.title('GEOMAGNETIC ACTIVITY')
@@ -56,52 +56,92 @@ data_load_state.text('ap data downloaded!')
 if st.checkbox('Show raw data'):
     st.subheader('Raw data')
     st.write(data)
-
-## create a data frame
+# create a data frame
 data_cal = pd.DataFrame({'Date':pd.to_datetime(data.Year.map(str) + "-" + data.Month.map(str) + "-" + data.Day.map(str)),
                           'ap':data.ap})
 
-# avg ap per day as a string list for args
-test_str = ""
-avg_ap_d = []
-avg_ap_d_t = []
-x = 0
-max_ap = [0, 0 , 0, 0, 0, 0, 0, 0, 0, 0]
-max_ap_y = ['', '', '', '', '', '', '', '', '', '']
-for i in range(1, len(data_cal)) : 
-  if data_cal['Date'][i] == test_str or i == 1:
-    x = x + data_cal['ap'][i]
-    test_str = data_cal['Date'][i]
-  else :
-    x = x / 8
-    avg_ap_d_t.append(str(test_str))
-    avg_ap_d.append(int(np.ceil(x)))
-    for y in range(0, 10, 1) :
-      if x > max_ap[y] :
-        max_ap[y] = int(np.ceil(x))
-        max_ap_y[y] = str(test_str)[0:10]
-        break
-    x = data_cal['ap'][i]
-    test_str = data_cal['Date'][i]
-
-## Show 10 maximum ap days
-max_ap_data = pd.DataFrame()
-max_ap_data['Date'] = list(max_ap_y)
-max_ap_data['ap'] = list(max_ap)
-max_ap_data_index = pd.Index(range(1, 11, 1))
-max_ap_data = max_ap_data.set_index(max_ap_data_index)
-# Show top 10 data                    
-st.write('The maximum of the daily average ap was ', str(int(max_ap[0])), ' on ', str(max_ap_y[0]), '.')
-if st.checkbox('Show max. ap days'):
-    st.subheader('Top 10 max. ap')
-    st.write(max_ap_data)
-    
-## Plotting
-st.subheader('Diagram of geomagnetic activity')
+## calculation of avg ap per day and top 10 max values
+# Function which is cachable
+@st.cache
+def calc_top10(date, ap):
+  avg_ap_d = []
+  avg_ap_d_t = []
+  max_ap = [ [0, ''], [0, ''], [0, ''], [0, ''], [0, ''], [0, ''], [0, ''], [0, ''], [0, ''], [0, ''] ]
+  test_str = ""
+  x = 0
+  for i in range(1, len(ap)) : 
+    if date[i] == test_str or i == 1:
+      x = x + ap[i]
+      test_str = date[i]
+    else :
+      x = x / 8
+      avg_ap_d_t.append(str(test_str))
+      avg_ap_d.append(int(np.ceil(x)))
+      for y in range(0, 10, 1) :
+        # creating top 10 list
+        if x > max_ap[y][0] :
+          max_ap[y][0] = int(np.ceil(x))
+          max_ap[y][1] = str(test_str)[0:10]
+          list.sort(max_ap, reverse = False)
+          break
+      x = ap[i]
+      test_str = date[i]
+  return avg_ap_d, avg_ap_d_t, max_ap
+# Call function to do the calculation
+avg_ap_d, avg_ap_d_t, max_ap = calc_top10(date = data_cal['Date'], ap = data_cal['ap'])
 # create dataframe with avg ap per day values
 data_plot = pd.DataFrame({'Date': pd.to_datetime(avg_ap_d_t),
                          'ap': avg_ap_d})
+                         
+## Plotting
+st.subheader('Diagram of geomagnetic activity')
 # set index (x-axis) to 'Date' column
 data_plot = data_plot.set_index('Date')
 # do the plotting
 st.line_chart(data_plot)
+
+## Show 10 maximum ap days
+max_ap_data = pd.DataFrame()
+max_ap_data['Date'] = [sublist[1] for sublist in max_ap]
+max_ap_data['ap'] = [sublist[0] for sublist in max_ap]
+max_ap_data_index = pd.Index(range(1, 11, 1))
+max_ap_data = max_ap_data.set_index(max_ap_data_index)
+# Show top 10 data                    
+#st.write('The maximum of the daily average ap was ', str(int(max_ap[0])), ' on ', str(max_ap_y[0]), '.')
+if st.checkbox('Show max. ap days'):
+    st.subheader('Top 10 max. ap')
+    st.write(max_ap_data)
+    # Ask for events
+date = st.selectbox('On which day was the event?', max_ap_data)
+st.write('You selected:', date)
+event = st.text_input('What happened on this day?', placeholder = 'All kinds of events')
+# write to databank
+ide = 0
+if st.button('Store in databank?'):
+  # Check for ID number
+  query = "SELECT * from `dbs5069306`.`topten`;"
+  rows = run_query(query)
+  row = [0]
+  for row in rows:
+    # checking for ID
+    if row[0] == 9999999:
+      print(row[0])
+  id = int(row[0]) + 1
+  # write to databank
+  query = "INSERT INTO `dbs5069306`.`topten` VALUES ('%s', '%s', '%s');" %(id, date, event)
+  run_query(query)
+  conn.commit()
+  st.write(date, event, ' stored to databank!')
+# Checkbox for option to see databank data
+if st.checkbox('Show databank data'):
+  st.subheader('Databank data')
+  query = "SELECT * from `dbs5069306`.`topten`;"
+  rows = run_query(query)
+  databank = pd.DataFrame(columns = ['ID', 'Date', 'Event'])
+  for row in rows:
+    df = pd.DataFrame([[row[0], row[1], row[2]]],
+    columns = ['ID', 'Date', 'Event'])
+    databank = databank.append(df)
+  # print databank in dataframe table
+  databank = databank.set_index('ID')
+  st.dataframe(databank)
