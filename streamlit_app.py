@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 import math
 import datetime
-import mysql.connector
+#import mysql.connector
 
 st.set_page_config(
      page_title = "KpApap",
@@ -16,18 +16,18 @@ st.set_page_config(
 ## SQL Connection
 # Initialize connection.
 # Uses st.cache to only run once.
-def init_connection():
-    return mysql.connector.connect(**st.secrets["mysql"])
+#def init_connection():
+#    return mysql.connector.connect(**st.secrets["mysql"])
 
-conn = init_connection()
+#conn = init_connection()
 
 # Perform query.
 # Uses st.cache to only rerun when the query changes or after 10 min.
 #@st.cache(ttl=600)
-def run_query(query):
-    with conn.cursor() as cur:
-        cur.execute(query)
-        return cur.fetchall()
+#def run_query(query):
+#    with conn.cursor() as cur:
+#        cur.execute(query)
+#        return cur.fetchall()
 
 ## Title and some information
 st.title('GEOMAGNETIC ACTIVITY')
