@@ -12,7 +12,6 @@ secrets.toml
 KpApap.sql
 KpApap.xml
 .DS_Store
-streamlit_app.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
