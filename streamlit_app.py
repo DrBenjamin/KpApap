@@ -112,36 +112,35 @@ if st.checkbox('Show max. ap days'):
     st.subheader('Top 10 max. ap')
     st.write(max_ap_data)
     # Ask for events
-date = st.selectbox('On which day was the event?', max_ap_data)
-st.write('You selected:', date)
-event = st.text_input('What happened on this day?', placeholder = 'All kinds of events')
-# write to databank
-ide = 0
-if st.button('Store in databank?'):
-  # Check for ID number
-  query = "SELECT * from `dbs5069306`.`topten`;"
-  rows = run_query(query)
-  row = [0]
-  for row in rows:
-    # checking for ID
-    if row[0] == 9999999:
-      print(row[0])
-  id = int(row[0]) + 1
-  # write to databank
-  query = "INSERT INTO `dbs5069306`.`topten` VALUES ('%s', '%s', '%s');" %(id, date, event)
-  run_query(query)
-  conn.commit()
-  st.write(date, event, ' stored to databank!')
-# Checkbox for option to see databank data
-if st.checkbox('Show databank data'):
-  st.subheader('Databank data')
-  query = "SELECT * from `dbs5069306`.`topten`;"
-  rows = run_query(query)
-  databank = pd.DataFrame(columns = ['ID', 'Date', 'Event'])
-  for row in rows:
-    df = pd.DataFrame([[row[0], row[1], row[2]]],
-    columns = ['ID', 'Date', 'Event'])
-    databank = databank.append(df)
-  # print databank in dataframe table
-  databank = databank.set_index('ID')
-  st.dataframe(databank)
+#date = st.selectbox('On which day was the event?', max_ap_data)
+#st.write('You selected:', date)
+#event = st.text_input('What happened on this day?', placeholder = 'All kinds of events')
+# # write to databank
+# if st.button('Store in databank?'):
+#   # Check for ID number
+#   id = 0
+#   query = "SELECT ID from `dbs5069306`.`topten`;"
+#   rows = run_query(query)
+#   row = [0]
+#   for row in rows:
+#     # checking for ID
+#     print(row[0])
+#   id = int(row[0]) + 1
+#   # write to databank
+#   query = "INSERT INTO `dbs5069306`.`topten` VALUES ('%s', '%s', '%s');" %(id, date, event)
+#   run_query(query)
+#   conn.commit()
+#   st.write(date, event, ' stored to databank!')
+# # Checkbox for option to see databank data
+# if st.checkbox('Show databank data'):
+#   st.subheader('Databank data')
+#   query = "SELECT * from `dbs5069306`.`topten`;"
+#   rows = run_query(query)
+#   databank = pd.DataFrame(columns = ['ID', 'Date', 'Event'])
+#   for row in rows:
+#     df = pd.DataFrame([[row[0], row[1], row[2]]],
+#     columns = ['ID', 'Date', 'Event'])
+#     databank = databank.append(df)
+#   # print databank in dataframe table
+#   databank = databank.set_index('ID')
+#   st.dataframe(databank)
