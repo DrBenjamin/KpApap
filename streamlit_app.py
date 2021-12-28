@@ -24,9 +24,6 @@ st.set_page_config(
 # Initialize connection.
 def init_connection():
   return mysql.connector.connect(**st.secrets["mysql"])
-
-#conn = init_connection()
-
 # Perform query
 def run_query(query):
   with conn.cursor() as cur:  
@@ -121,41 +118,44 @@ st.write('The maximum of the daily average ap was on ', str(max_ap[0][1]), ' at 
 if st.checkbox('Show max. ap days'):
   st.subheader('Top 10 max. ap')
   st.write(max_ap_data)
-# Ask for events
-date = st.selectbox('On which day was the event?', max_ap_data, key = 'date')
-st.write('You selected:', date)
-event = st.text_input('What happened on this day?', placeholder = 'All kinds of events', key = 'event')
-# Write data to databank
-if st.button('Store in databank?'):
-# Check for ID number
-  id = 0
-  query = "SELECT ID from `dbs5069306`.`topten`;"
-  rows = run_query(query)
-  row = [0]
-  for row in rows:
-    # Checking for ID
-    print(row[0])
-    id = int(row[0]) + 1
-  # Writing to databank
-  query = "INSERT INTO `dbs5069306`.`topten` VALUES ('%s', '%s', '%s');" %(id, date, event)
-  run_query(query)
-  conn.commit()
-  st.write(date, event, ' stored to databank!')
-# Checkbox for option to see databank data
-if st.checkbox('Show databank data'):
-  st.subheader('Databank data')
-  query = "SELECT * from `dbs5069306`.`topten`;"
-  rows = run_query(query)
-  lang = st.selectbox('In which language should the event text be translated?', ('BG', 'CS', 'DA', 'DE', 'EL', 'EN-GB', 'ES', 'ET', 'FI', 'FR', 'HU', 'IT', 'JA', 'LT', 'LV', 'NL', 'PL', 'PT', 'RO', 'RU', 'SK', 'SL', 'SV', 'ZH'), index = 3, key = 'lang')
-  databank = pd.DataFrame(columns = ['ID', 'Date', 'Event'])
-  for row in rows:
-    if lang != 'EN-GB' :
-      trans_event = str((trans(row[2], lang)))
-    else:
-      trans_event = row[2]
-    df = pd.DataFrame([[row[0], row[1], trans_event]], columns = ['ID', 'Date', 'Event'])
-    databank = databank.append(df)
-  # Print databank in dataframe table
-  databank = databank.set_index('ID')
-  #st.dataframe(databank, 400, 200)
-  st.table(databank)
+  
+## Use local databank
+if st.checkbox('Use local databank?'):
+  conn = init_connection()
+  # Ask for events
+  date = st.selectbox('On which day was the event?', max_ap_data, key = 'date')
+  st.write('You selected:', date)
+  event = st.text_input('What happened on this day?', placeholder = 'All kinds of events', key = 'event')
+  # Write data to databank
+  if st.button('Store in databank?'):
+  # Check for ID number
+    id = 0
+    query = "SELECT ID from `dbs5069306`.`topten`;"
+    rows = run_query(query)
+    row = [0]
+    for row in rows:
+      # Checking for ID
+      print(row[0])
+      id = int(row[0]) + 1
+    # Writing to databank
+    query = "INSERT INTO `dbs5069306`.`topten` VALUES ('%s', '%s', '%s');" %(id, date, event)
+    run_query(query)
+    conn.commit()
+    st.write(date, event, ' stored to databank!')
+  # Checkbox for option to see databank data
+  if st.checkbox('Show databank data'):
+    st.subheader('Databank data')
+    query = "SELECT * from `dbs5069306`.`topten`;"
+    rows = run_query(query)
+    lang = st.selectbox('In which language should the event text be translated?', ('BG', 'CS', 'DA', 'DE', 'EL', 'EN-GB', 'ES', 'ET', 'FI', 'FR', 'HU', 'IT', 'JA', 'LT', 'LV', 'NL', 'PL', 'PT', 'RO', 'RU', 'SK', 'SL', 'SV', 'ZH'), index = 3, key = 'lang')
+    databank = pd.DataFrame(columns = ['ID', 'Date', 'Event'])
+    for row in rows:
+      if lang != 'EN-GB' :
+        trans_event = str((trans(row[2], lang)))
+      else:
+        trans_event = row[2]
+      df = pd.DataFrame([[row[0], row[1], trans_event]], columns = ['ID', 'Date', 'Event'])
+      databank = databank.append(df)
+    # Print databank in dataframe table
+    databank = databank.set_index('ID')
+    st.table(databank)
