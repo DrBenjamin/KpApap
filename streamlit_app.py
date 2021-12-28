@@ -25,7 +25,7 @@ st.set_page_config(
 def init_connection():
   return mysql.connector.connect(**st.secrets["mysql"])
 
-conn = init_connection()
+#conn = init_connection()
 
 # Perform query
 def run_query(query):
