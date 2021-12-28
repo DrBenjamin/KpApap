@@ -81,7 +81,7 @@ if st.checkbox(str(check1)):
   st.subheader(check1sub)
   st.write(data)
 # Create a data frames
-data_plot_td = pd.DataFrame({'Time': data.Hour + 1.5, 'Kp': data.Kp}).tail(8)
+data_plot_td = pd.DataFrame({'Time': datetime.time(data.Hour, 0)).strftime('%H:%M'), 'Kp': data.Kp}).tail(8)
 data_cal = pd.DataFrame({'Date': pd.to_datetime(data.Year.map(str) + "-" + data.Month.map(str) + "-" + data.Day.map(str)), 'ap': data.ap})
 
 ## Calculation of avg ap per day and top 10 max values
