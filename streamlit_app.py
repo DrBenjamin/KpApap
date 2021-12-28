@@ -142,9 +142,11 @@ max_ap_data_index = pd.Index(range(1, 11, 1))
 max_ap_data = max_ap_data.set_index(max_ap_data_index)
 # Show top 10 data
 info_maxap = 'The maximum of the daily average ap was on '
+info_maxapat = 'at'
 if lang != 'EN-GB' :
   info_maxap = trans(info_maxap, lang)
-st.write(str(info_maxap), str(max_ap[0][1]), ' at ', str(max_ap[0][0]), '.')
+  info_maxapat = trans(info_maxapat, lang)
+st.write(str(info_maxap), str(max_ap[0][1]), ' ', str(info_maxapat), ' ', str(max_ap[0][0]), '.')
 check_maxap = 'Show maximum days?'
 check_maxapsubheader = 'Top 10'
 if lang != 'EN-GB' :
