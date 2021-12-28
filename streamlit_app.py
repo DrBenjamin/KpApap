@@ -38,14 +38,14 @@ subheader = 'Planetary indicators of geomantic activity'
 info1 = 'The geomagnetic 3-hour Kp index was introduced in 1949 by J. Bartels and is calculated from the standardized K indices (Ks) of 13 geomagnetic observatories. It was developed to measure solar particle radiation via its magnetic effects and is now considered a proxy for the energy input from the solar wind into the Earth system.'
 info2 = 'Because of the non-linear relationship of the K-scale to magnetometer fluctuations, it is not meaningful to take the average of a set of K-indices. Instead, every 3-hour K-value will be converted back into a linear scale called the a-index or just ap.'
 if lang != 'EN-GB' :
-  title = str(trans(title, lang))
-  info1 = str(trans(info1, lang))
-  info2 = str(trans(info2, lang))
-  subheader = str(trans(subheader, lang))
+  title = trans(title, lang)
+  info1 = trans(info1, lang)
+  info2 = trans(info2, lang)
+  subheader = trans(subheader, lang)
 st.title(title)
 st.subheader(subheader)
-st.write(info1)
-st.write(info2)
+st.write(str(info1))
+st.write(str(info2))
 
 # Link to data from Helmholtz-Zentrum Potsdam
 # https://www-app3.gfz-potsdam.de/kp_index/Kp_ap_nowcast.txt
@@ -145,7 +145,7 @@ info_maxap = 'The maximum of the daily average ap was on '
 if lang != 'EN-GB' :
   info_maxap = trans(info_maxap, lang)
 st.write(str(info_maxap), str(max_ap[0][1]), ' at ', str(max_ap[0][0]), '.')
-check_maxap = 'Show ten maximum days?'
+check_maxap = 'Show maximum days?'
 check_maxapsubheader = 'Top 10'
 if lang != 'EN-GB' :
   check_maxap = trans(check_maxap, lang)
