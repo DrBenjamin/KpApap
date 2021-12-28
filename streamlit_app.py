@@ -3,7 +3,7 @@ import streamlit.components.v1 as stc
 import pandas as pd
 import numpy as np
 import math
-import datetime
+from datetime import datetime
 import mysql.connector
 import deepl
 import sys
@@ -56,7 +56,7 @@ DATA_URL = 'https://www-app3.gfz-potsdam.de/kp_index/Kp_ap_since_1932.txt'
 # Function is cached
 @st.cache
 def load_data():
-  colnames = ['Year', 'Month', 'Day', 'Hour', 'Minute', 'Days', 'Days_m', 'Kp', 'ap', 'D']
+  colnames = ['Year', 'Month', 'Day', 'Hour', 'Hour_m', 'Days', 'Days_m', 'Kp', 'ap', 'D']
   data = pd.read_table(DATA_URL, sep = " ", header = None, names = colnames, skiprows = 31, skipinitialspace = True)
   return data
 
@@ -81,7 +81,7 @@ if st.checkbox(str(check1)):
   st.subheader(check1sub)
   st.write(data)
 # Create data frames
-data_plot_td = pd.DataFrame({'Time': datetime.time(data.Hour).strftime('%H'), 'Kp': data.Kp}).tail(8)
+data_plot_today = pd.DataFrame({'Time': data.Hour.astype(int), 'Kp': data.Kp}).tail(8)
 data_cal = pd.DataFrame({'Date': pd.to_datetime(data.Year.map(str) + "-" + data.Month.map(str) + "-" + data.Day.map(str)), 'ap': data.ap})
 
 ## Calculation of avg ap per day and top 10 max values
@@ -118,17 +118,17 @@ data_plot = pd.DataFrame({'Date': pd.to_datetime(avg_ap_d_t),
                          'ap': avg_ap_d})
                          
 ## Plotting
-# Set indexes (x-axis) to 'Date' column
-data_plot_td = data_plot_td.set_index('Time')
+# Set indexes (x-axis) to 'Time' and 'Date' column
+data_plot_today = data_plot_today.set_index('Time')
 data_plot = data_plot.set_index('Date')
 # Daily activity
-plot1_subheader = 'Diagram of today`s geomagnetic activity'
-plot2_subheader = 'Diagram of geomagnetic activity since 1932'
+plot1_subheader = 'Diagram of today`s geomagnetic activity (Kp)'
+plot2_subheader = 'Diagram of geomagnetic activity since 1932 (ap)'
 if lang != 'EN-GB' :
   plot1_subheader = trans(plot1_subheader, lang)
   plot2_subheader = trans(plot2_subheader, lang)
 st. subheader(plot1_subheader)
-st.bar_chart(data_plot_td)
+st.bar_chart(data_plot_today)
 # All data plot
 st.subheader(plot2_subheader)
 st.line_chart(data_plot)
