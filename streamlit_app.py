@@ -88,6 +88,8 @@ def run_query(query):
 ## Title and some information
 # Ask for language (whole site)
 lang = st.selectbox('In which language should this site appear?', ('BG', 'CS', 'DA', 'DE', 'EL', 'EN-GB', 'ES', 'ET', 'FI', 'FR', 'HU', 'IT', 'JA', 'LT', 'LV', 'NL', 'PL', 'PT', 'RO', 'RU', 'SK', 'SL', 'SV', 'ZH'), index = 5, key = 'lang')
+# Do the translating
+translate(lang, title, subheader, info1, info2, data_load_text, data_down_text, check1, check1sub, plot1_subheader, plot2_subheader, info_maxap, info_maxapat, check_maxap, check_maxapsubheader, use_databank, day_event, text_input, text_output, text_placeholder, stored_data, stored_datasuccess, show_data, show_datasubheader)
 st.title(title)
 st.subheader(subheader)
 st.write(str(info1))
@@ -210,6 +212,3 @@ if st.checkbox(str(use_databank)):
     # Print databank in dataframe table
     databank = databank.set_index('ID')
     st.table(databank)
-
-# Do the translating
-translate(lang, title, subheader, info1, info2, data_load_text, data_down_text, check1, check1sub, plot1_subheader, plot2_subheader, info_maxap, info_maxapat, check_maxap, check_maxapsubheader, use_databank, day_event, text_input, text_output, text_placeholder, stored_data, stored_datasuccess, show_data, show_datasubheader)
