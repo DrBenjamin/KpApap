@@ -23,7 +23,7 @@ subheader = 'Planetary indicators of geomantic activity'
 info1 = 'The geomagnetic 3-hour Kp index was introduced in 1949 by J. Bartels and is calculated from the standardized K indices (Ks) of 13 geomagnetic observatories. It was developed to measure solar particle radiation via its magnetic effects and is now considered a proxy for the energy input from the solar wind into the Earth system.'
 info2 = 'Because of the non-linear relationship of the K-scale to magnetometer fluctuations, it is not meaningful to take the average of a set of K-indices. Instead, every 3-hour K-value will be converted back into a linear scale called the a-index or just ap.'
 data_load_text = 'Loading data...'
-data_down_text = 'Data downloaded'
+data_down_text = 'Download completed'
 check1 = 'Show raw data?'
 check1sub = 'Raw data'
 plot1_subheader = 'Diagram of today`s geomagnetic activity (Kp)'
@@ -41,7 +41,7 @@ stored_data = 'Store in databank?'
 stored_datasuccess = 'stored to databank!'
 show_data = 'Show databank data?'
 show_datasubheader = 'Databank data'
-# Just do the translation once (if language is not changing)
+# Just do the translation once (if language option was not changing) trough caching
 @st.cache(allow_output_mutation = True, suppress_st_warning = True, hash_funcs={'_thread.RLock': hash, 'builtins.weakref': hash})
 def translate(x, en_title, en_subheader, en_info1, en_info2, en_data_load_text, en_data_down_text, en_check1, en_check1sub, en_plot1_subheader, en_plot2_subheader, en_info_maxap, en_info_maxapat, en_check_maxap, en_check_maxapsubheader, en_use_databank, en_day_event, en_text_input, en_text_output, en_text_placeholder, en_stored_data, en_stored_datasuccess, en_show_data, en_show_datasubheader):
   if x != 'EN-GB' :
@@ -96,7 +96,8 @@ st.subheader(subheader)
 st.write(str(info1))
 st.write(str(info2))
 
-# Link to data from Helmholtz-Zentrum Potsdam
+## Download links
+# Data comes from Helmholtz-Zentrum Potsdam
 # https://www-app3.gfz-potsdam.de/kp_index/Kp_ap_nowcast.txt
 # https://www-app3.gfz-potsdam.de/kp_index/Kp_ap_since_1932.txt
 DATA_URL = 'https://www-app3.gfz-potsdam.de/kp_index/Kp_ap_since_1932.txt'
@@ -117,7 +118,8 @@ data_load_state.text(str(data_down_text) + ' (' + str(round(sys.getsizeof(data)/
 if st.checkbox(str(check1)):
   st.subheader(check1sub)
   st.write(data)
-# Create data frames
+  
+## Create data frames
 data_plot_today = pd.DataFrame({'Time': data.Hour.astype(int), 'Kp': data.Kp}).tail(8)
 data_cal = pd.DataFrame({'Date': pd.to_datetime(data.Year.map(str) + "-" + data.Month.map(str) + "-" + data.Day.map(str)), 'ap': data.ap})
 
@@ -166,13 +168,15 @@ st.subheader(plot2_subheader)
 st.line_chart(data_plot)
 
 ## Show 10 maximum ap days
+# Reverse order (highest first)
 list.sort(max_ap, reverse = True)
+# Create data frame
 max_ap_data = pd.DataFrame()
 max_ap_data['Date'] = [sublist[1] for sublist in max_ap]
 max_ap_data['ap'] = [sublist[0] for sublist in max_ap]
 max_ap_data_index = pd.Index(range(1, 11, 1))
 max_ap_data = max_ap_data.set_index(max_ap_data_index)
-# Show top 10 data
+# Show Top 10
 st.write(str(info_maxap), str(max_ap[0][1]), ' ', str(info_maxapat), ' ', str(max_ap[0][0]), '.')
 if st.checkbox(str(check_maxap)):
   st.subheader(check_maxapsubheader)
