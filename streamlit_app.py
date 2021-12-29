@@ -8,11 +8,7 @@ import mysql.connector
 import deepl
 import sys
 
-def trans(x, y):
-  translator = deepl.Translator(st.secrets["deepl"]["key"])
-  result = translator.translate_text(x, target_lang = y) 
-  return result
-
+## Streamlit initial setup
 st.set_page_config(
   page_title = "KpApap",
   page_icon = "thumbnail.png",
@@ -20,8 +16,67 @@ st.set_page_config(
   initial_sidebar_state = "expanded",
 )
 
+## DeepL Translating
+# All text stuff
+title = 'GEOMAGNETIC ACTIVITY'
+subheader = 'Planetary indicators of geomantic activity'
+info1 = 'The geomagnetic 3-hour Kp index was introduced in 1949 by J. Bartels and is calculated from the standardized K indices (Ks) of 13 geomagnetic observatories. It was developed to measure solar particle radiation via its magnetic effects and is now considered a proxy for the energy input from the solar wind into the Earth system.'
+info2 = 'Because of the non-linear relationship of the K-scale to magnetometer fluctuations, it is not meaningful to take the average of a set of K-indices. Instead, every 3-hour K-value will be converted back into a linear scale called the a-index or just ap.'
+data_load_text = 'Loading data...'
+data_down_text = 'Data downloaded'
+check1 = 'Show raw data?'
+check1sub = 'Raw data'
+plot1_subheader = 'Diagram of today`s geomagnetic activity (Kp)'
+plot2_subheader = 'Diagram of geomagnetic activity since 1932 (ap)'
+info_maxap = 'The maximum of the daily average ap was on '
+info_maxapat = 'at'
+check_maxap = 'Show maximum days?'
+check_maxapsubheader = 'Top 10'
+use_databank = 'Use local databank?'
+day_event = 'On which day was the event?'
+text_input = 'What happened on this day?'
+text_output = 'You selected'
+text_placeholder = 'All kinds of events'
+stored_data = 'Store in databank?'
+stored_datasuccess = 'stored to databank!'
+show_data = 'Show databank data?'
+show_datasubheader = 'Databank data'
+# Just do the translation once (if language is not changing)
+@st.cache(allow_output_mutation = True, suppress_st_warning = True, hash_funcs={'_thread.RLock': hash, 'builtins.weakref': hash})
+def translate(x, en_title, en_subheader, en_info1, en_info2, en_data_load_text, en_data_down_text, en_check1, en_check1sub, en_plot1_subheader, en_plot2_subheader, en_info_maxap, en_info_maxapat, en_check_maxap, en_check_maxapsubheader, en_use_databank, en_day_event, en_text_input, en_text_output, en_text_placeholder, en_stored_data, en_stored_datasuccess, en_show_data, en_show_datasubheader):
+  if x != 'EN-GB' :
+    en_title = trans(en_title, x)
+    en_info1 = trans(en_info1, x)
+    en_info2 = trans(en_info2, x)
+    en_subheader = trans(en_subheader, x)
+    en_data_load_text = trans(en_data_load_text, x)
+    en_data_down_text = trans(en_data_down_text, x)
+    en_check1 = trans(en_check1, x)
+    en_check1sub = trans(en_check1sub, x)
+    en_plot1_subheader = trans(en_plot1_subheader, x)
+    en_plot2_subheader = trans(en_plot2_subheader, x)
+    en_info_maxap = trans(en_info_maxap, x)
+    en_info_maxapat = trans(en_info_maxapat, x)
+    en_check_maxap = trans(en_check_maxap, x)
+    en_check_maxapsubheader = trans(en_check_maxapsubheader, x)
+    en_use_databank = trans(en_use_databank, x)
+    en_day_event = trans(en_day_event, x)
+    en_text_input = trans(en_text_input, x)
+    en_text_output = trans(en_text_output, x)
+    en_text_placeholder = trans(en_text_placeholder, x)
+    en_stored_data = trans(en_stored_data, x)
+    en_stored_datasuccess = trans(en_stored_datasuccess, x)
+    en_show_data = trans(en_show_data, x)
+    en_show_datasubheader = trans(en_show_datasubheader, x)
+  return en_title, en_info1, en_info2, en_subheader, en_data_load_text, en_data_down_text, en_check1, en_check1sub, en_plot1_subheader, en_plot2_subheader, en_info_maxap, en_info_maxapat, en_check_maxap, en_check_maxapsubheader, en_use_databank, en_day_event, en_text_input, en_text_output, en_text_placeholder, en_stored_data, en_stored_datasuccess, en_show_data, en_show_datasubheader
+# DeepL function
+def trans(x, y):
+  translator = deepl.Translator(st.secrets["deepl"]["key"])
+  result = translator.translate_text(x, target_lang = y) 
+  return result
+
 ## SQL Connection
-# Initialize connection.
+# Initialize connection
 def init_connection():
   return mysql.connector.connect(**st.secrets["mysql"])
 # Perform query
@@ -33,15 +88,6 @@ def run_query(query):
 ## Title and some information
 # Ask for language (whole site)
 lang = st.selectbox('In which language should this site appear?', ('BG', 'CS', 'DA', 'DE', 'EL', 'EN-GB', 'ES', 'ET', 'FI', 'FR', 'HU', 'IT', 'JA', 'LT', 'LV', 'NL', 'PL', 'PT', 'RO', 'RU', 'SK', 'SL', 'SV', 'ZH'), index = 5, key = 'lang')
-title = 'GEOMAGNETIC ACTIVITY'
-subheader = 'Planetary indicators of geomantic activity'
-info1 = 'The geomagnetic 3-hour Kp index was introduced in 1949 by J. Bartels and is calculated from the standardized K indices (Ks) of 13 geomagnetic observatories. It was developed to measure solar particle radiation via its magnetic effects and is now considered a proxy for the energy input from the solar wind into the Earth system.'
-info2 = 'Because of the non-linear relationship of the K-scale to magnetometer fluctuations, it is not meaningful to take the average of a set of K-indices. Instead, every 3-hour K-value will be converted back into a linear scale called the a-index or just ap.'
-if lang != 'EN-GB' :
-  title = trans(title, lang)
-  info1 = trans(info1, lang)
-  info2 = trans(info2, lang)
-  subheader = trans(subheader, lang)
 st.title(title)
 st.subheader(subheader)
 st.write(str(info1))
@@ -59,25 +105,13 @@ def load_data():
   colnames = ['Year', 'Month', 'Day', 'Hour', 'Hour_m', 'Days', 'Days_m', 'Kp', 'ap', 'D']
   data = pd.read_table(DATA_URL, sep = " ", header = None, names = colnames, skiprows = 31, skipinitialspace = True)
   return data
-
 # Show loading message
-data_load_text = 'Loading data...'
-data_down_text = 'Data downloaded'
-if lang != 'EN-GB' :
-  data_load_text = trans(data_load_text, lang)
-  data_down_text = trans(data_down_text, lang)
 data_load_state = st.text(data_load_text)
 data = load_data()
 data_load_state.text(str(data_down_text) + ' (' + str(round(sys.getsizeof(data)/1048576, 2)) + 'MB)!')
 
 ## Checkbox for option to see raw data
-check1 = 'Show raw data?'
-if lang != 'EN-GB' :
-  check1 = trans(check1, lang)
 if st.checkbox(str(check1)):
-  check1sub = 'Raw data'
-  if lang != 'EN-GB' :
-    check1sub = trans(check1sub, lang)
   st.subheader(check1sub)
   st.write(data)
 # Create data frames
@@ -86,7 +120,7 @@ data_cal = pd.DataFrame({'Date': pd.to_datetime(data.Year.map(str) + "-" + data.
 
 ## Calculation of avg ap per day and top 10 max values
 # Function is cached
-@st.cache(allow_output_mutation=True)
+@st.cache(allow_output_mutation = True)
 def calc_top10(date, ap):
   avg_ap_d = []
   avg_ap_d_t = []
@@ -122,11 +156,6 @@ data_plot = pd.DataFrame({'Date': pd.to_datetime(avg_ap_d_t),
 data_plot_today = data_plot_today.set_index('Time')
 data_plot = data_plot.set_index('Date')
 # Daily activity
-plot1_subheader = 'Diagram of today`s geomagnetic activity (Kp)'
-plot2_subheader = 'Diagram of geomagnetic activity since 1932 (ap)'
-if lang != 'EN-GB' :
-  plot1_subheader = trans(plot1_subheader, lang)
-  plot2_subheader = trans(plot2_subheader, lang)
 st. subheader(plot1_subheader)
 st.bar_chart(data_plot_today)
 # All data plot
@@ -141,50 +170,19 @@ max_ap_data['ap'] = [sublist[0] for sublist in max_ap]
 max_ap_data_index = pd.Index(range(1, 11, 1))
 max_ap_data = max_ap_data.set_index(max_ap_data_index)
 # Show top 10 data
-info_maxap = 'The maximum of the daily average ap was on '
-info_maxapat = 'at'
-if lang != 'EN-GB' :
-  info_maxap = trans(info_maxap, lang)
-  info_maxapat = trans(info_maxapat, lang)
 st.write(str(info_maxap), str(max_ap[0][1]), ' ', str(info_maxapat), ' ', str(max_ap[0][0]), '.')
-check_maxap = 'Show maximum days?'
-check_maxapsubheader = 'Top 10'
-if lang != 'EN-GB' :
-  check_maxap = trans(check_maxap, lang)
-  check_maxapsubheader = trans(check_maxapsubheader, lang)
 if st.checkbox(str(check_maxap)):
   st.subheader(check_maxapsubheader)
   st.write(max_ap_data)
   
 ## Use local databank
-use_databank = 'Use local databank?'
-if lang != 'EN-GB' :
-  use_databank = trans(use_databank, lang)
 if st.checkbox(str(use_databank)):
   conn = init_connection()
   # Ask for events
-  day_event = 'On which day was the event?'
-  text_input = 'What happened on this day?'
-  text_output = 'You selected'
-  text_placeholder = 'All kinds of events'
-  if lang != 'EN-GB' :
-    day_event = trans(day_event, lang)
-    text_input = trans(text_input, lang)
-    text_output = trans(text_output, lang)
-    text_placeholder = trans(text_placeholder, lang)
   date = st.selectbox(str(day_event), max_ap_data, key = 'date')
   st.write(str(text_output), date)
   event = st.text_input(str(text_input), placeholder = text_placeholder, key = 'event')
   # Write data to databank
-  stored_data = 'Store in databank?'
-  stored_datasuccess = 'stored to databank!'
-  show_data = 'Show databank data?'
-  show_datasubheader = 'Databank data'
-  if lang != 'EN-GB' :
-    stored_data = trans(stored_data, lang)
-    stored_datasuccess = trans(stored_datasuccess, lang)
-    show_data = trans(show_data, lang)
-    show_datasubheader = trans(show_datasubheader, lang)
   if st.button(str(stored_data)):
   # Check for ID number
     id = 0
@@ -212,3 +210,6 @@ if st.checkbox(str(use_databank)):
     # Print databank in dataframe table
     databank = databank.set_index('ID')
     st.table(databank)
+
+# Do the translating
+translate(lang, title, subheader, info1, info2, data_load_text, data_down_text, check1, check1sub, plot1_subheader, plot2_subheader, info_maxap, info_maxapat, check_maxap, check_maxapsubheader, use_databank, day_event, text_input, text_output, text_placeholder, stored_data, stored_datasuccess, show_data, show_datasubheader)
