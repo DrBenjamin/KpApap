@@ -46,9 +46,9 @@ show_datasubheader = 'Databank data'
 def translate(x, en_title, en_subheader, en_info1, en_info2, en_data_load_text, en_data_down_text, en_check1, en_check1sub, en_plot1_subheader, en_plot2_subheader, en_info_maxap, en_info_maxapat, en_check_maxap, en_check_maxapsubheader, en_use_databank, en_day_event, en_text_input, en_text_output, en_text_placeholder, en_stored_data, en_stored_datasuccess, en_show_data, en_show_datasubheader):
   if x != 'EN-GB' :
     en_title = trans(en_title, x)
+    en_subheader = trans(en_subheader, x)
     en_info1 = trans(en_info1, x)
     en_info2 = trans(en_info2, x)
-    en_subheader = trans(en_subheader, x)
     en_data_load_text = trans(en_data_load_text, x)
     en_data_down_text = trans(en_data_down_text, x)
     en_check1 = trans(en_check1, x)
@@ -68,7 +68,7 @@ def translate(x, en_title, en_subheader, en_info1, en_info2, en_data_load_text, 
     en_stored_datasuccess = trans(en_stored_datasuccess, x)
     en_show_data = trans(en_show_data, x)
     en_show_datasubheader = trans(en_show_datasubheader, x)
-  return en_title, en_info1, en_info2, en_subheader, en_data_load_text, en_data_down_text, en_check1, en_check1sub, en_plot1_subheader, en_plot2_subheader, en_info_maxap, en_info_maxapat, en_check_maxap, en_check_maxapsubheader, en_use_databank, en_day_event, en_text_input, en_text_output, en_text_placeholder, en_stored_data, en_stored_datasuccess, en_show_data, en_show_datasubheader
+  return en_title, en_subheader, en_info1, en_info2, en_data_load_text, en_data_down_text, en_check1, en_check1sub, en_plot1_subheader, en_plot2_subheader, en_info_maxap, en_info_maxapat, en_check_maxap, en_check_maxapsubheader, en_use_databank, en_day_event, en_text_input, en_text_output, en_text_placeholder, en_stored_data, en_stored_datasuccess, en_show_data, en_show_datasubheader
 # DeepL function
 def trans(x, y):
   translator = deepl.Translator(st.secrets["deepl"]["key"])
