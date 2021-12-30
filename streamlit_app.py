@@ -18,7 +18,7 @@ st.set_page_config(
 
 ## DeepL Translating
 ## Ask for language
-lang = st.selectbox('In which language should this site appear?', ('BG', 'CS', 'DA', 'DE', 'EL', 'EN-GB', 'ES', 'ET', 'FI', 'FR', 'HU', 'IT', 'JA', 'LT', 'LV', 'NL', 'PL', 'PT', 'RO', 'RU', 'SK', 'SL', 'SV', 'ZH'), index = 5, key = 'lang')
+lang = st.sidebar.selectbox('In which language should this site appear?', ('BG', 'CS', 'DA', 'DE', 'EL', 'EN-GB', 'ES', 'ET', 'FI', 'FR', 'HU', 'IT', 'JA', 'LT', 'LV', 'NL', 'PL', 'PT', 'RO', 'RU', 'SK', 'SL', 'SV', 'ZH'), index = 5, key = 'lang')
 # All text stuff
 title = 'GEOMAGNETIC ACTIVITY'
 subheader = 'Planetary indicators of geomantic activity'
