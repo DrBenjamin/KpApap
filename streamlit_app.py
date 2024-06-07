@@ -44,7 +44,7 @@ stored_datasuccess = 'stored to databank!'
 show_data = 'Show databank data?'
 show_datasubheader = 'Databank data'
 # Just do the translation once (if language option was not changing) trough caching
-@st.cache(allow_output_mutation = True, suppress_st_warning = True, hash_funcs={'_thread.RLock': hash, 'builtins.weakref': hash})
+@st.cache_data
 def translate(x, en_title, en_subheader, en_info1, en_info2, en_data_load_text, en_data_down_text, en_check1, en_check1sub, en_plot1_subheader, en_plot2_subheader, en_info_maxap, en_info_maxapat, en_check_maxap, en_check_maxapsubheader, en_use_databank, en_day_event, en_text_input, en_text_output, en_text_placeholder, en_stored_data, en_stored_datasuccess, en_show_data, en_show_datasubheader):
   if x != 'EN-GB' :
     en_title = trans(en_title, x)
@@ -105,7 +105,7 @@ DATA_URL = 'https://www-app3.gfz-potsdam.de/kp_index/Kp_ap_since_1932.txt'
 
 ## Load data function
 # Function is cached
-@st.cache
+@st.cache_resource
 def load_data():
   colnames = ['Year', 'Month', 'Day', 'Hour', 'Hour_m', 'Days', 'Days_m', 'Kp', 'ap', 'D']
   data = pd.read_table(DATA_URL, sep = " ", header = None, names = colnames, skiprows = 31, skipinitialspace = True)
@@ -126,7 +126,7 @@ data_cal = pd.DataFrame({'Date': pd.to_datetime(data.Year.map(str) + "-" + data.
 
 ## Calculation of avg ap per day and top 10 max values
 # Function is cached
-@st.cache(allow_output_mutation = True)
+@st.cache_resource
 def calc_top10(date, ap):
   avg_ap_d = []
   avg_ap_d_t = []

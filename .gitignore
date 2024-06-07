@@ -12,6 +12,7 @@ secrets.toml
 KpApap.sql
 KpApap.xml
 .DS_Store
+KpApap Native Apps/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
