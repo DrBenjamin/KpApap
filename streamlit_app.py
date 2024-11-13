@@ -121,7 +121,7 @@ if st.checkbox(str(check1)):
   st.write(data)
   
 ## Create data frames
-data_plot_today = pd.DataFrame({'Time': data.Hour.astype(int), 'Kp': data.Kp}).tail(8)
+data_plot_today = pd.DataFrame({'Time': data.Hour.astype(int), 'ap': data.ap}).tail(8)
 data_cal = pd.DataFrame({'Date': pd.to_datetime(data.Year.map(str) + "-" + data.Month.map(str) + "-" + data.Day.map(str)), 'ap': data.ap})
 
 ## Calculation of avg ap per day and top 10 max values
@@ -162,7 +162,7 @@ data_plot = pd.DataFrame({'Date': pd.to_datetime(avg_ap_d_t),
 data_plot_today = data_plot_today.set_index('Time')
 data_plot = data_plot.set_index('Date')
 # Daily activity
-st. subheader(plot1_subheader)
+st.subheader(plot1_subheader)
 st.bar_chart(data_plot_today)
 # All data plot
 st.subheader(plot2_subheader)
